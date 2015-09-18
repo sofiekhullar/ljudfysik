@@ -1,5 +1,6 @@
-% VX_denoise.m  [DAFXbook, 2nd ed., chapter 7]
-%===== This program makes a denoising of a sound
+% VX_whisper.m   [DAFXbook, 2nd ed., chapter 7]
+%===== This program makes the whisperization of a sound, 
+%===== by randomizing the phase
 %
 %--------------------------------------------------------------------------
 % This source code is provided without any warranties as published in 
@@ -11,10 +12,10 @@
 clear; clf
 
 %----- user data -----
-n1           = 512;   % analysis step [samples]
-n2           = n1;    % synthesis step [samples]
-s_win        = 2048;  % analysis window length [samples]
-[DAFx_in,FS] = wavread('redwheel.wav');
+s_win        = 512;     % analysis window length [samples]
+n1           = s_win/8; % analysis step [samples]
+n2           = n1;      % synthesis step [samples]
+[DAFx_in,FS] = wavread('Toms_diner.wav');
 
 %----- initialize windows, arrays, etc -----
 w1       = hanning(s_win, 'periodic'); % analysis window
@@ -23,33 +24,31 @@ L        = length(DAFx_in);
 DAFx_in  = [zeros(s_win, 1); DAFx_in; ...
   zeros(s_win-mod(L,n1),1)] / max(abs(DAFx_in));
 DAFx_out = zeros(length(DAFx_in),1);
-hs_win   = s_win/2;
-coef     = 0.01;
-freq     = (0:1:299)/s_win*44100;
 
 tic
 %UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 pin  = 0;
 pout = 0;
 pend = length(DAFx_in) - s_win;
-
 while pin<pend
   grain = DAFx_in(pin+1:pin+s_win).* w1;
 %===========================================
-  f     = fft(grain);
-  r     = abs(f)/hs_win;
-  ft    = f.*r./ (r+coef);
-  grain = (real(ifft(ft))).*w2;
+  f     = fft(fftshift(grain));
+  r     = abs(f);
+  phi   = 2*pi*rand(s_win,1);
+  ft    = (r.* exp(i*phi));
+  grain = fftshift(real(ifft(ft))).*w2;
 % ===========================================
   DAFx_out(pout+1:pout+s_win) = ...
     DAFx_out(pout+1:pout+s_win) + grain;
-  pin  = pin + n1;
-  pout = pout + n2;
+  pin   = pin + n1;
+  pout  = pout + n2;
 end
 %UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 toc
+
 %----- listening and saving the output -----
-% DAFx_in  = DAFx_in(s_win+1:s_win+L);
-DAFx_out = DAFx_out(s_win+1:s_win+L);
+% DAFx_in = DAFx_in(s_win+1:s_win+L);
+DAFx_out = DAFx_out(s_win+1:s_win+L) / max(abs(DAFx_out));
 soundsc(DAFx_out, FS);
-wavwrite(DAFx_out, FS, 'x1_denoise.wav');
+wavwrite(DAFx_out, FS, 'whisper2.wav');

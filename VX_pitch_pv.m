@@ -1,6 +1,6 @@
-% VX_tstretch_int_pv.m   [DAFXbook, 2nd ed., chapter 7]
-%===== This program performs integer ratio time stretching 
-%===== using the FFT-IFFT approach
+% VX_pitch_pv.m   [DAFXbook, 2nd ed., chapter 7]
+%===== This program performs pitch shifting 
+%===== using the FFT/IFFT approach
 %
 %--------------------------------------------------------------------------
 % This source code is provided without any warranties as published in 
@@ -12,22 +12,32 @@
 clear; clf
 
 %----- user data -----
-n1           = 64;     % analysis step [samples]
-n2           = 512;    % synthesis step ([samples]
 s_win        = 2048;   % analysis window length [samples]
-[DAFx_in,FS] = wavread('la.wav');
+n2           = 512;    % synthesis step [samples]
+pit_ratio    = 1.2     % pitch-shifting ratio
+[DAFx_in,FS] = wavread('Toms_diner.wav');
 
 %----- initialize windows, arrays, etc -----
-tstretch_ratio = n2/n1
+n1       = round(n2 / pit_ratio);      % analysis step [samples]
+tstretch_ratio = n2/n1;
 w1       = hanning(s_win, 'periodic'); % analysis window
 w2       = w1;    % synthesis window
 L        = length(DAFx_in);
 DAFx_in  = [zeros(s_win, 1); DAFx_in; ...
    zeros(s_win-mod(L,n1),1)] / max(abs(DAFx_in));
-DAFx_out = zeros(s_win+ceil(length(DAFx_in)*tstretch_ratio),1);
+DAFx_out = zeros(length(DAFx_in),1);
 omega    = 2*pi*n1*[0:s_win-1]'/s_win;
 phi0     = zeros(s_win,1);
 psi      = zeros(s_win,1);
+
+%----- for linear interpolation of a grain of length s_win -----
+lx   = floor(s_win*n1/n2);
+x    = 1 + (0:lx-1)'*s_win/lx;
+ix   = floor(x);
+ix1  = ix + 1;
+dx   = x - ix;
+dx1  = 1 - dx;
+
 
 tic
 %UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
@@ -41,19 +51,27 @@ while pin<pend
   f     = fft(fftshift(grain));
   r     = abs(f);
   phi   = angle(f);
-  ft    = (r.* exp(i*tstretch_ratio*phi));
+  %---- computing phase increment ----
+  delta_phi = omega + princarg(phi-phi0-omega);
+  phi0  = phi;
+  psi   = princarg(psi+delta_phi*tstretch_ratio);
+  %---- synthesizing time scaled grain ----
+  ft    = (r.* exp(i*psi));
   grain = fftshift(real(ifft(ft))).*w2;
+  %----- interpolating grain -----
+  grain2 = [grain;0];
+  grain3 = grain2(ix).*dx1+grain2(ix1).*dx;
+  %plot(grain);drawnow;
 % ===========================================
-  DAFx_out(pout+1:pout+s_win) = ...
-    DAFx_out(pout+1:pout+s_win) + grain;
-  pin   = pin + n1;
-  pout  = pout + n2;
-end
+  DAFx_out(pout+1:pout+lx) = DAFx_out(pout+1:pout+lx) + grain3;
+  pin    = pin + n1;
+  pout   = pout + n1;
+  end
 %UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 toc
 
 %----- listening and saving the output -----
 % DAFx_in  = DAFx_in(s_win+1:s_win+L);
-DAFx_out = DAFx_out(s_win+1:length(DAFx_out))/max(abs(DAFx_out));
+DAFx_out = DAFx_out(s_win+1:s_win+L) / max(abs(DAFx_out));
 soundsc(DAFx_out, FS);
-wavwrite(DAFx_out, FS, 'la_stretch_int_pv.wav');
+wavwrite(DAFx_out, FS, 'pitch_pv.wav');
