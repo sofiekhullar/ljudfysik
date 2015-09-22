@@ -14,7 +14,7 @@ clear; clf
 s_win        = 1024;   % analysis window length [samples]
 n1           = 441;    % analysis step [samples]
 n2           = n1;     % synthesis step [samples]
-[DAFx_in,FS] = wavread('Toms_diner.wav');
+[DAFx_in,FS] = wavread('sound/Toms_diner.wav');
 
 %----- initialize windows, arrays, etc -----
 w1       = hanning(s_win, 'periodic'); % analysis window
@@ -48,4 +48,4 @@ toc
 % DAFx_in = DAFx_in(s_win+1:s_win+L);
 DAFx_out = DAFx_out(s_win+1:s_win+L) / max(abs(DAFx_out));
 soundsc(DAFx_out, FS);
-wavwrite(DAFx_out, FS, 'robot.wav');
+wavwrite(DAFx_out, FS, 'output/robot.wav');
