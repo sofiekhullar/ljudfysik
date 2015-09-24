@@ -60,6 +60,8 @@ bg = imread('kittens.jpg'); imagesc(bg);
 set(ah,'handlevisibility','off','visible','off')
 uistack(ah, 'bottom');
 
+imgData = imread('hest.jpg');   % or: imread(URL)
+hButton = uicontrol('CData',imgData, ...);
 % Update handles structure
 guidata(hObject, handles);
 
@@ -73,15 +75,6 @@ function varargout = gui_2_OutputFcn(hObject, eventdata, handles)
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[a,map]=imread('hest.jpg');
-[r,c,d]=size(a); 
-x=ceil(r/250); % Ändrar storleken?
-y=ceil(c/250); 
-g=a(1:x:end,1:y:end,:);
-g(g==255)=5.5*255;
-set(handles.pushbutton1,'CData',g); %robot
-set(handles.pushbutton2,'CData',g); %bebis
-set(handles.pushbutton3,'CData',g); %johanna
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
