@@ -19,7 +19,7 @@ recObj = audiorecorder(fs, bits, 1);
 % Collect a sample of your speech with a microphone, and plot the signal data:
 % Record your voice for 5 seconds.
 disp('Start speaking.')
-recordblocking(recObj, 5);
+recordblocking(recObj, 2);
 disp('End of Recording.');
 
 % Store data in double-precision array.

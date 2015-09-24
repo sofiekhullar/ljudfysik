@@ -29,7 +29,7 @@ myRecording = getaudiodata(recObj);
 % Plot the waveform.
 plot(myRecording);
 
-audiowrite('rec_whisper', myRecording, fs);
+audiowrite('rec_whisper.wav', myRecording, fs);
 
 %#wavplay(myRecording,fs);
 %----- user data -----
