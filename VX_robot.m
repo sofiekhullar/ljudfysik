@@ -10,11 +10,32 @@
 
 clear; clf
 
+%----- record sound -----
+fs = 44100;
+bits = 16;
+recObj = audiorecorder(fs, bits, 1);
+%get(recObj)
+
+% Collect a sample of your speech with a microphone, and plot the signal data:
+% Record your voice for 5 seconds.
+disp('Start speaking.')
+recordblocking(recObj, 5);
+disp('End of Recording.');
+
+% Store data in double-precision array.
+myRecording = getaudiodata(recObj);
+
+% Plot the waveform.
+plot(myRecording);
+
+wavwrite(myRecording, fs, bits,'rec_robot');
+
+%#wavplay(myRecording,fs);
 %----- user data -----
 s_win        = 1024;   % analysis window length [samples]
 n1           = 441;    % analysis step [samples]
 n2           = n1;     % synthesis step [samples]
-[DAFx_in,FS] = wavread('sound/Toms_diner.wav');
+[DAFx_in,FS] = wavread('rec_robot.wav');
 
 %----- initialize windows, arrays, etc -----
 w1       = hanning(s_win, 'periodic'); % analysis window
