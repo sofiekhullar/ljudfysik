@@ -28,14 +28,15 @@ myRecording = getaudiodata(recObj);
 % Plot the waveform.
 plot(myRecording);
 
-wavwrite(myRecording, fs, bits,'rec_robot');
+% wavwrite(myRecording, fs, bits,'rec_robot');
+audiowrite('rec_robot.wav', myRecording, fs);
 
 %#wavplay(myRecording,fs);
 %----- user data -----
 s_win        = 1024;   % analysis window length [samples]
 n1           = 441;    % analysis step [samples]
 n2           = n1;     % synthesis step [samples]
-[DAFx_in,FS] = wavread('rec_robot.wav');
+[DAFx_in,FS] = audioread('rec_robot.wav');
 
 %----- initialize windows, arrays, etc -----
 w1       = hanning(s_win, 'periodic'); % analysis window
@@ -69,4 +70,4 @@ toc
 % DAFx_in = DAFx_in(s_win+1:s_win+L);
 DAFx_out = DAFx_out(s_win+1:s_win+L) / max(abs(DAFx_out));
 soundsc(DAFx_out, FS);
-wavwrite(DAFx_out, FS, 'output/robot.wav');
+audiowrite('output/robot.wav', DAFx_out, FS);

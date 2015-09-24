@@ -29,14 +29,14 @@ myRecording = getaudiodata(recObj);
 % Plot the waveform.
 plot(myRecording);
 
-wavwrite(myRecording, fs, bits,'rec_pitch');
+audiowrite('rec_pitch', myRecording, fs);
 
 %#wavplay(myRecording,fs);
 %----- user data -----
 s_win        = 2048;   % analysis window length [samples]
 n2           = 512;    % synthesis step [samples]
 pit_ratio    = 1.2     % pitch-shifting ratio
-[DAFx_in,FS] = wavread('rec_pitch.wav');
+[DAFx_in,FS] = audioread('rec_pitch.wav');
 
 %----- initialize windows, arrays, etc -----
 n1       = round(n2 / pit_ratio);      % analysis step [samples]
@@ -95,4 +95,4 @@ toc
 % DAFx_in  = DAFx_in(s_win+1:s_win+L);
 DAFx_out = DAFx_out(s_win+1:s_win+L) / max(abs(DAFx_out));
 soundsc(DAFx_out, FS);
-wavwrite(DAFx_out, FS, 'output/pitch_pv.wav');
+audiowrite('output/pitch_pv.wav', DAFx_out, FS);
