@@ -55,6 +55,11 @@ function gui_2_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for gui_2
 handles.output = hObject;
 
+ah = axes('unit', 'normalized', 'position', [0 0 1 1]); 
+bg = imread('kittens.jpg'); imagesc(bg);
+set(ah,'handlevisibility','off','visible','off')
+uistack(ah, 'bottom');
+
 % Update handles structure
 guidata(hObject, handles);
 
