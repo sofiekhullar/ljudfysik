@@ -79,7 +79,7 @@ x=ceil(r/260); % Ändrar storleken?
 y=ceil(c/360); 
 g=a(1:x:end,1:y:end,:);
 g(g==255)=5.5*255;
-set(handles.bebis,'CData',g); 
+set(handles.robot,'CData',g); 
 
 [a,map]=imread('bebis.jpg');
 [r,c,d]=size(a); 
@@ -87,7 +87,7 @@ x=ceil(r/260); % Ändrar storleken?
 y=ceil(c/360); 
 g=a(1:x:end,1:y:end,:);
 g(g==255)=5.5*255;
-set(handles.robot,'CData',g); 
+set(handles.pushbutton2,'CData',g); 
 
 [a,map]=imread('monster.jpg');
 [r,c,d]=size(a); 
@@ -102,7 +102,7 @@ varargout{1} = handles.output;
 
 % --- Robot 
 % --- Executes on button press in bebis.
-function bebis_Callback(hObject, eventdata, handles)
+function robot_Callback(hObject, eventdata, handles)
 % hObject    handle to bebis (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -173,7 +173,7 @@ audiowrite('output/robot.wav', DAFx_out, FS);
 
 % --- Bebis
 % --- Executes on button press in pushbutton2.
-function pushbutton2_Callback(hObject, eventdata, handles)
+function bebis_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -268,7 +268,7 @@ audiowrite('output/pitch_pv.wav', DAFx_out, FS);
 
 % --- Bakis johanna
 % --- Executes on button press in pushbutton3.
-function pushbutton3_Callback(hObject, eventdata, handles)
+function monster_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -336,16 +336,3 @@ DAFx_out = DAFx_out(s_win+1:s_win+L) / max(abs(DAFx_out));
 soundsc(DAFx_out, FS);
 audiowrite('output/whisper2.wav', DAFx_out, FS);
 
-
-% --- Executes on button press in robot.
-function robot_Callback(hObject, eventdata, handles)
-% hObject    handle to robot (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-
-% --- Executes on button press in monster.
-function monster_Callback(hObject, eventdata, handles)
-% hObject    handle to monster (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
