@@ -75,24 +75,24 @@ function varargout = gui_2_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [a,map]=imread('robot.jpg');
 [r,c,d]=size(a); 
-x=ceil(r/200); % Ändrar storleken?
-y=ceil(c/300); 
+x=ceil(r/260); % Ändrar storleken?
+y=ceil(c/360); 
 g=a(1:x:end,1:y:end,:);
 g(g==255)=5.5*255;
 set(handles.bebis,'CData',g); 
 
 [a,map]=imread('bebis.jpg');
 [r,c,d]=size(a); 
-x=ceil(r/200); % Ändrar storleken?
-y=ceil(c/300); 
+x=ceil(r/260); % Ändrar storleken?
+y=ceil(c/360); 
 g=a(1:x:end,1:y:end,:);
 g(g==255)=5.5*255;
 set(handles.robot,'CData',g); 
 
 [a,map]=imread('monster.jpg');
 [r,c,d]=size(a); 
-x=ceil(r/200); % Ändrar storleken?
-y=ceil(c/300); 
+x=ceil(r/260); % Ändrar storleken?
+y=ceil(c/360); 
 g=a(1:x:end,1:y:end,:);
 g(g==255)=5.5*255;
 set(handles.monster,'CData',g); 
