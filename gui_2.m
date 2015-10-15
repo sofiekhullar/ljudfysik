@@ -87,7 +87,7 @@ x=ceil(r/260); % Ändrar storleken?
 y=ceil(c/360); 
 g=a(1:x:end,1:y:end,:);
 g(g==255)=5.5*255;
-set(handles.pushbutton2,'CData',g); 
+set(handles.bebis,'CData',g); 
 
 [a,map]=imread('monster.jpg');
 [r,c,d]=size(a); 
